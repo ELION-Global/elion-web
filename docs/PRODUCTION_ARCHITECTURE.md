@@ -29,3 +29,19 @@ Public `GET`/`HEAD` pages use CloudFront’s managed optimized cache policy; Nex
 Initial production objective: 99.9% monthly availability for the public site, measured by the Route 53 HTTPS health check and CloudWatch metrics. CloudFront, WAF, ALB, multiple ECS tasks, and two AZs protect against individual task and single-AZ failures. The current design does not claim 99.99%: it remains single-region, depends on AWS control planes and DNS, and has no second regional origin. Phase 1.1 should add a second-region recovery design only after real traffic and budget justify it.
 
 Staging is intentionally less redundant (one task and one NAT gateway). Production must use two NAT gateways, one per AZ; using one NAT in production creates an avoidable outbound-dependency single point of failure.
+
+## Phase 1.1 architecture review
+
+The selected architecture is technically sound for a serious anonymous public service, but it is not the least-expensive way to host an early-stage website. Its fixed cost buys origin isolation, predictable rolling deployments, and a production-shaped staging environment. The review recommendation is to retain the design for staging, then make the gated improvements in `PRODUCTION_READINESS.md` before production.
+
+| Component | Need / problem solved | Cost and failure mode | Security value / simpler alternative |
+| --- | --- | --- | --- |
+| CloudFront | Global HTTPS delivery, caching and origin shielding. | Low at early traffic because AWS includes monthly free usage; misconfiguration can serve stale documents until invalidated. | Strong. Direct ALB delivery is simpler but loses edge delivery and origin shielding; not recommended. |
+| WAF | Blocks common malicious input and abusive per-IP traffic before the origin. | A web ACL, rules and requests have a recurring charge; a false positive can block legitimate users. | Strong. Begin with logs/sampled requests and tune narrowly; paid Bot Control is not justified yet. |
+| ALB | Health-based routing, origin TLS and two-AZ task distribution. | Meaningful fixed hourly/LCU charge; an ALB configuration or certificate failure makes the origin unavailable. | Strong. Direct Fargate/public IP is cheaper but materially weakens isolation; not recommended. |
+| ECS/Fargate | Runs the existing container without server administration and replaces unhealthy tasks. | Always-on task-hours are a fixed charge; bad images, capacity shortages or task health failures stop the service. | Good. App Runner is simpler but changes the reviewed origin/network model; do not switch without a separate decision. |
+| ECR | Immutable, scanned release images and SHA rollback source. | Storage is small initially; image retention or scan findings can become operational issues. | Strong. Keep immutable tags and gate critical scan findings before production. |
+| CloudWatch/SNS | Actionable service/error alerts and retained logs. | Log volume and alarms create variable spend; alert delivery can fail if no confirmed recipient exists. | Necessary. Keep 30-day retention and a small alert set. |
+| ACM | Managed viewer/origin certificate lifecycle. | Integrated public certificates have no direct certificate charge; bad DNS validation or attachment prevents HTTPS. | Necessary. Use non-exportable ACM public certificates only. |
+| Route 53 health check | Independent public HTTPS signal. | Optional recurring charge; it does not itself fail traffic over in this single-region design. | Useful after launch. Keep disabled until DNS is live; CloudWatch/ALB health remains the initial signal. |
+| GitHub Actions + OIDC | Reproducible release path without long-lived AWS keys. | Workflow or OIDC policy mistakes can halt releases or over-authorize CI. | Necessary. Separate staging/production roles and restrict OIDC claims before use. |

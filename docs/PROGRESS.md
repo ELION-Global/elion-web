@@ -2,6 +2,19 @@
 
 Last updated: 2026-08-15
 
+## Latest change — Phase 1.1 launch readiness, cost, and security gate
+
+- Began a non-deploying review of the committed Phase 1 infrastructure. No Terraform apply, AWS resource, certificate, DNS record, IAM role, SNS subscription, or production deployment was created.
+- Recorded the current architecture’s fixed-cost reality, cost scenarios, threat-model findings, exact staging requirements, plan limitations, failure modes, and formal staging/production gates in the operational documentation.
+- Placeholder-only Terraform plan attempts are deliberately blocked by the missing approved AWS identity and remote-state backend; this is a documented staging prerequisite, not a reason to weaken provider authentication or invent credentials.
+
+Verification completed on 2026-08-15:
+
+- Terraform 1.15.5 `fmt -check`, `init -backend=false`, and `validate` passed for bootstrap and application infrastructure; no plan or apply was run.
+- GitHub Actions workflows passed `actionlint`, including the protected manual deployment and infrastructure-validation workflows.
+- `npm run type-check`, `npm run lint`, `npm run test` (5 tests), `npm run build`, `npm run test:performance`, `npm run test:smoke`, and `npm run audit` passed.
+- Client JavaScript is 899.2 KiB, within the 1 MB budget, and the audit reports 0 vulnerabilities.
+
 ## Latest change — Phase 1 public-launch infrastructure
 
 - Added a Terraform-only, non-deploying AWS infrastructure definition: immutable ECR releases; isolated two-AZ Fargate origin; HTTPS ALB; CloudFront with WAF; CloudWatch logs, dashboard, alarms, and optional Route 53 health checks.
