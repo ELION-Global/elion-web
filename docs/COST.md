@@ -15,6 +15,8 @@ Phase 1 chooses managed services where they remove material operational risk, bu
 
 Set AWS Budgets and Cost Anomaly Detection at account level before public launch. The finance owner must set monthly alerts and an escalation contact because actual regional price, transfer, request, and traffic patterns determine cost. Review AWS’s current pricing pages during approval; no price figure is hard-coded here because it would age quickly.
 
+> Architecture decision pending: [the zero-cost / near-zero-cost infrastructure study](ZERO_COST_INFRASTRUCTURE_STUDY.md) recommends a static edge-first public launch rather than paying the AWS origin's fixed baseline before ELION needs a stateful service. The AWS model remains the reviewed escalation path.
+
 ## Phase 1.1 monthly planning estimate
 
 These are planning estimates in USD, not a quote. They use 730 hours/month and public US East reference rates checked on 2026-08-15: Fargate Linux/x86 `0.5 vCPU + 1 GiB` is approximately `$18` per task-month, NAT gateway is `$0.045` per hour plus `$0.045/GB`, and a low-usage ALB is roughly `$18–22` per month. The current example region is `ap-south-1`; its actual rates, taxes, edge geography and data-transfer price can differ, so an approved AWS Pricing Calculator estimate is required before spend approval.

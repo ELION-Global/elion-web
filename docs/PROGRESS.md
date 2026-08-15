@@ -2,6 +2,12 @@
 
 Last updated: 2026-08-15
 
+## Latest change — zero-cost / near-zero-cost infrastructure study
+
+- Completed a non-deploying assessment of current 2026 edge, static, serverless, cloud and database options. No provider account, DNS record, deployment, credential, or cloud resource was created.
+- Chose portable edge-first public delivery: Cloudflare Pages static output with a narrowly scoped Worker only for live API needs, while preserving Docker, GitHub quality controls, standard interfaces, and the existing AWS Terraform as the later stateful-platform path.
+- Recorded comparable architectures, cost bands, free-tier limits, security trade-offs, provider restrictions, migration gates, and an AI abstraction boundary in `docs/ZERO_COST_INFRASTRUCTURE_STUDY.md`.
+
 ## Latest change — Phase 1.1 launch readiness, cost, and security gate
 
 - Began a non-deploying review of the committed Phase 1 infrastructure. No Terraform apply, AWS resource, certificate, DNS record, IAM role, SNS subscription, or production deployment was created.
