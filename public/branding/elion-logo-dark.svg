@@ -1,0 +1,7 @@
+<svg width="800" height="220" viewBox="0 0 800 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="220" fill="#0B1320"/>
+  <text x="40" y="150" fill="#E8EEF7" font-family="Segoe UI, Arial, sans-serif" font-size="104" font-weight="600" letter-spacing="2">ELION</text>
+  <circle cx="690" cy="52" r="12" fill="#E0B85F"/>
+  <path d="M690 52C670 52 650 70 630 86C610 103 590 113 560 113" stroke="#B7C2CF" stroke-width="3" stroke-linecap="round"/>
+  <path d="M565 108C560 89 572 72 592 62" stroke="#E0B85F" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,9 @@
+{
+  "name": "elion",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ELION project foundation",
+  "scripts": {
+    "test": "echo \"No tests configured yet.\" && exit 0"
+  }
+}
