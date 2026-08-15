@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 
+const isStaticExport = process.env.ELION_BUILD_TARGET === 'static'
+
 const securityHeaders = [
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -32,16 +34,24 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  output: 'standalone',
+  // The normal build remains a portable Docker/AWS artifact. The static target is
+  // intentionally opt-in for the Cloudflare Pages compatibility proof of concept.
+  output: isStaticExport ? 'export' : 'standalone',
 
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: securityHeaders,
-      },
-    ]
-  },
+  // Static hosts do not execute Next.js header rules. The static build copies
+  // the equivalent Cloudflare Pages `_headers` file into `out/` instead.
+  ...(isStaticExport
+    ? {}
+    : {
+        async headers() {
+          return [
+            {
+              source: '/(.*)',
+              headers: securityHeaders,
+            },
+          ]
+        },
+      }),
 
   images: {
     formats: ['image/avif', 'image/webp'],

@@ -35,6 +35,16 @@ test('security headers constrain embedded and plugin content', async () => {
   assert.match(config, /X-Content-Type-Options/)
 })
 
+test('the static Pages target preserves the public security-header policy', async () => {
+  const pagesHeaders = await readSource('cloudflare/pages/_headers')
+
+  assert.match(pagesHeaders, /Content-Security-Policy: default-src 'self'/)
+  assert.match(pagesHeaders, /X-Content-Type-Options: nosniff/)
+  assert.match(pagesHeaders, /X-Frame-Options: DENY/)
+  assert.match(pagesHeaders, /Referrer-Policy: strict-origin-when-cross-origin/)
+  assert.match(pagesHeaders, /\/api\/health\n  ! Cache-Control\n  Cache-Control: no-store/)
+})
+
 test('the official logo asset is available to the public site', async () => {
   const logoComponent = await readSource('src/components/ui/ElionLogo.tsx')
 

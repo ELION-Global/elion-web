@@ -6,11 +6,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
+    "build:static": "node scripts/build-static.mjs",
+    "preview:static": "node scripts/static-preview.mjs",
     "start": "next start",
     "lint": "eslint .",
     "type-check": "tsc --noEmit --incremental false",
     "test": "node --test tests",
     "test:smoke": "node scripts/smoke-test.mjs",
+    "test:static": "node scripts/build-static.mjs && node scripts/check-static-performance-budget.mjs && node scripts/smoke-static.mjs",
+    "test:static:performance": "node scripts/check-static-performance-budget.mjs",
     "test:performance": "node scripts/check-performance-budget.mjs",
     "audit": "npm audit --audit-level=high"
   },

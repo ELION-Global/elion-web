@@ -9,4 +9,5 @@ node_modules/
 Thumbs.db
 coverage/
 .turbo/
+.artifacts/static-export/
 .terraform/

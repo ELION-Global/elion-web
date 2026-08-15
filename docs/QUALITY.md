@@ -8,6 +8,8 @@ The public site is verified through the following commands:
 - `npm run build` produces the optimized, standalone production output.
 - `npm run test:performance` reports the aggregate JavaScript chunk size and fails above the 1 MB budget. Override the threshold with `PERFORMANCE_BUDGET_BYTES` only with a documented performance review.
 - `npm run test:smoke` launches the standalone output and validates the homepage, health endpoint, and key response headers.
+- `npm run build:static` creates the isolated Cloudflare Pages proof-of-concept artifact in `out/` without changing the standalone Docker build.
+- `npm run test:static` builds that artifact, verifies its separate JavaScript budget, and serves it locally to check public routes, generated metadata, assets, static health document, 404 behavior and Pages header policy.
 - `npm run audit` fails for high- or critical-severity dependency advisories.
 
 GitHub Actions runs all of these checks on pull requests and updates to `main`. The current automated checks are intentionally dependency-light; a browser-based accessibility audit should be added when the delivery environment supplies a maintained browser test runner.

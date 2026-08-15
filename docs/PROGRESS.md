@@ -2,6 +2,15 @@
 
 Last updated: 2026-08-15
 
+## Latest change — Phase 1.2 static compatibility and Cloudflare Pages proof of concept
+
+- Approved Architecture E for the current public platform's proof-of-concept stage, without replacing the existing Docker/AWS path, creating a Cloudflare account, deploying a Pages project, modifying DNS, or adding a Worker.
+- Added an isolated static-export target, Cloudflare Pages header/redirect assets, local static preview server, static smoke verification, and static performance budget check. The normal standalone build continues to retain the dynamic container `/api/health` route.
+- All public pages, project SSG routes, sitemap, robots, manifest, icon, Open Graph image, official logo, favicon and 404 output export successfully. Static delivery uses a generated no-store health document plus external HTTPS monitoring; it does not run a Worker merely to return a timestamp.
+- Recorded route audit, security/caching differences, failure model, cost assumptions and exact temporary Pages staging procedure in `docs/CLOUDFLARE_STATIC_POC.md`.
+
+Verification completed on 2026-08-15: `npm run type-check`, `npm run lint`, `npm run test` (6 tests), `npm run build`, `npm run test:performance` (899.2 KiB), `npm run test:smoke`, `npm run test:static` (899.4 KiB), `npm run audit` (0 vulnerabilities), and GitHub Actions `actionlint` all passed.
+
 ## Latest change — zero-cost / near-zero-cost infrastructure study
 
 - Completed a non-deploying assessment of current 2026 edge, static, serverless, cloud and database options. No provider account, DNS record, deployment, credential, or cloud resource was created.

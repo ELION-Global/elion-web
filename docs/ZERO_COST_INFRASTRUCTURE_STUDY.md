@@ -1,6 +1,6 @@
 # Zero-cost / near-zero-cost advanced infrastructure study
 
-**Decision status:** architecture research only. No provider account, DNS record, deployment, credential, or cloud resource is created by this study.
+**Decision status:** Architecture E is approved for the current public platform's Phase 1.2 compatibility proof of concept. No provider account, DNS record, deployment, credential, or cloud resource is created by this study.
 
 **Research date:** 2026-08-15. Pricing and free-tier terms change frequently; re-check the linked primary sources before adopting a service.
 
