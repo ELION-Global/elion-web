@@ -4,7 +4,7 @@ Last updated: 2026-08-15
 
 ## Latest change — Phase 0.2 product and brand polish
 
-- Added the user-supplied transparent logo variant, `public/branding/elion-logo-blend.png`, for the compact header and footer placements. The original official logo remains unchanged in the large hero and social identity.
+- Added the user-supplied transparent logo variant, `public/branding/elion-logo-blend.png`, for the large homepage hero, where it blends cleanly with the site background. The original official logo remains unchanged in compact header/footer and social placements.
 - Excluded local visual-review artifacts from linting so diagnostic browser profiles cannot affect application quality checks.
 - Excluded local review artifacts and handoff files from Docker build contexts.
 - Replaced misleading contributor-registration wording with an explicit statement that no application or interest form is currently available.

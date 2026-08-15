@@ -27,6 +27,7 @@ export function HeroSection() {
         <div className="max-w-3xl">
           <ElionLogo
             size="lg"
+            variant="blend"
             priority
             className="w-[288px] sm:w-[352px] md:w-[416px] h-auto mb-5"
           />
