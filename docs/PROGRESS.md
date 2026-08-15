@@ -4,6 +4,9 @@ Last updated: 2026-08-15
 
 ## Latest change — Phase 0.2 product and brand polish
 
+- Added the user-supplied transparent logo variant, `public/branding/elion-logo-blend.png`, for the compact header and footer placements. The original official logo remains unchanged in the large hero and social identity.
+- Excluded local visual-review artifacts from linting so diagnostic browser profiles cannot affect application quality checks.
+- Excluded local review artifacts and handoff files from Docker build contexts.
 - Replaced misleading contributor-registration wording with an explicit statement that no application or interest form is currently available.
 - Reframed future-area pages as honest program notices with useful links to the public work that is available now.
 - Strengthened the mission framework and project-program presentation without adding unsupported technical claims or changing the data-driven project architecture.
@@ -15,6 +18,8 @@ Verification completed on 2026-08-15:
 - `npm run build`, `npm run test:performance`, and `npm run test:smoke` passed.
 - Client JavaScript remains 899.1 KiB, within the 1 MB budget; `npm run audit` found 0 vulnerabilities.
 - `docker build --tag elion-web:local .` passed. The rebuilt `elion-web-local` container is healthy, and all public routes plus `/api/health` return HTTP 200.
+
+Transparent-logo update verification completed on 2026-08-15: type check, lint, five contract tests, production build, smoke test, performance check, and dependency audit passed. Client JavaScript is 899.2 KiB, within budget. The rebuilt Docker container is healthy; both the homepage and `elion-logo-blend.png` return HTTP 200.
 
 ## Current state
 

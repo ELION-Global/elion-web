@@ -39,7 +39,9 @@ test('the official logo asset is available to the public site', async () => {
   const logoComponent = await readSource('src/components/ui/ElionLogo.tsx')
 
   assert.match(logoComponent, /\/branding\/elion-logo\.png/)
+  assert.match(logoComponent, /\/branding\/elion-logo-blend\.png/)
   await access(new URL('../public/branding/elion-logo.png', import.meta.url), constants.R_OK)
+  await access(new URL('../public/branding/elion-logo-blend.png', import.meta.url), constants.R_OK)
 })
 
 test('the join page does not imply a live contributor-registration flow', async () => {

@@ -13,7 +13,7 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="flex flex-col gap-4">
             <Link href="/" aria-label="ELION — home" className="w-fit rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-elion-blue">
-              <ElionLogo size="sm" className="w-[116px] h-auto" />
+              <ElionLogo size="sm" variant="blend" className="w-[116px] h-auto" />
             </Link>
             <p className="text-sm text-silver-400 max-w-xs leading-relaxed">
               A global engineering organization building peaceful technologies for humanity.

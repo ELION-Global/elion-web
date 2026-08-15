@@ -11,3 +11,7 @@ tests/
 Dockerfile
 .dockerignore
 .gitignore
+.amazonq/
+.artifacts/
+chat_with_AIs.txt
+blend_logo.png
