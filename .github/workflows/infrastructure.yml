@@ -1,0 +1,38 @@
+name: Infrastructure validation
+
+on:
+  pull_request:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infrastructure.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infrastructure.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.5
+          terraform_wrapper: false
+      - name: Format check
+        run: |
+          terraform -chdir=infra/bootstrap fmt -check -recursive
+          terraform -chdir=infra/terraform fmt -check -recursive
+      - name: Validate bootstrap configuration
+        run: |
+          terraform -chdir=infra/bootstrap init -backend=false
+          terraform -chdir=infra/bootstrap validate
+      - name: Validate application infrastructure
+        run: |
+          terraform -chdir=infra/terraform init -backend=false
+          terraform -chdir=infra/terraform validate

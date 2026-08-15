@@ -15,3 +15,4 @@ Dockerfile
 .artifacts/
 chat_with_AIs.txt
 blend_logo.png
+infra/

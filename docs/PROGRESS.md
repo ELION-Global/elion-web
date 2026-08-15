@@ -2,6 +2,22 @@
 
 Last updated: 2026-08-15
 
+## Latest change — Phase 1 public-launch infrastructure
+
+- Added a Terraform-only, non-deploying AWS infrastructure definition: immutable ECR releases; isolated two-AZ Fargate origin; HTTPS ALB; CloudFront with WAF; CloudWatch logs, dashboard, alarms, and optional Route 53 health checks.
+- Added a safe one-time bootstrap for versioned encrypted Terraform state, locking, and image registry. No AWS credentials, domain, DNS record, certificate, secret, plan, or resource was created during this repository change.
+- Added controlled GitHub Actions delivery: existing quality validation now builds the production Docker image; infrastructure is formatted and validated; deployment is manual, environment-scoped, OIDC-based, SHA-identified, and requires configured GitHub Environment protection for production.
+- Corrected Docker production builds so the safe public canonical URL is compiled per staging/production release rather than defaulting to localhost.
+- Added actionable architecture, operations, security, recovery, cost, deployment, and readiness documentation. The production-launch checklist identifies account, domain, certificate, role, budget, and approval decisions that remain human-owned.
+
+Verification completed on 2026-08-15:
+
+- Terraform 1.15.5 `fmt -check`, `init -backend=false`, and `validate` passed for bootstrap and application infrastructure; no plan or apply was run.
+- GitHub Actions workflows passed `actionlint`, including the protected manual deployment and infrastructure-validation workflows.
+- `npm run type-check`, `npm run lint`, `npm run test` (5 tests), `npm run build`, `npm run test:performance`, `npm run test:smoke`, and `npm run audit` passed.
+- Client JavaScript is 899.2 KiB, within the 1 MB budget, and the audit reports 0 vulnerabilities.
+- `docker build --tag elion-web:local .` passed. The recreated `elion-web-local` container is healthy; all 13 public, metadata, and health routes return HTTP 200, with core security headers present.
+
 ## Latest change — Phase 0.2 product and brand polish
 
 - Added the user-supplied transparent logo variant, `public/branding/elion-logo-blend.png`, for the large homepage hero, where it blends cleanly with the site background. The original official logo remains unchanged in compact header/footer and social placements.

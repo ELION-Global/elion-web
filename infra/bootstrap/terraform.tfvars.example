@@ -1,0 +1,4 @@
+# Apply this one-time bootstrap with a tightly controlled administrator session.
+# It creates no compute or public endpoint. Do not commit your completed tfvars.
+aws_region        = "ap-south-1"
+state_bucket_name = "replace-with-a-globally-unique-elion-terraform-state-bucket"

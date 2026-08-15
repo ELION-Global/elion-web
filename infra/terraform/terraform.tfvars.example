@@ -1,0 +1,19 @@
+# Copy this file outside source control for each environment. Values below are
+# examples only and must be replaced; do not store certificates or header values
+# in a committed tfvars file.
+aws_region         = "ap-south-1"
+environment        = "staging"
+domain_name        = "staging.example.org"
+availability_zones = ["ap-south-1a", "ap-south-1b"]
+container_image    = "123456789012.dkr.ecr.ap-south-1.amazonaws.com/elion:replace-with-immutable-tag"
+
+# Supply these via protected CI secrets or a secure local prompt, never here:
+# cloudfront_certificate_arn = "arn:aws:acm:us-east-1:..."
+# origin_certificate_arn     = "arn:aws:acm:ap-south-1:..."
+# origin_header_value        = "long-random-value"
+
+nat_gateway_count  = 1
+desired_count      = 1
+minimum_task_count = 1
+maximum_task_count = 2
+log_retention_days = 30

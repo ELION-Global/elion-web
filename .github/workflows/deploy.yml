@@ -1,0 +1,89 @@
+name: Controlled deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target GitHub Environment (staging or production)'
+        required: true
+        type: choice
+        options: [staging, production]
+      git_ref:
+        description: 'Immutable Git SHA to deploy (defaults to the workflow ref)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: elion-deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git_ref || github.sha }}
+          fetch-depth: 1
+      - id: release
+        name: Identify the checked-out immutable release
+        run: echo "image_tag=sha-$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: elion-${{ inputs.environment }}-${{ github.run_id }}
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push immutable release image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ steps.release.outputs.image_tag }}
+          SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          if aws ecr describe-images --repository-name "$REPOSITORY" --image-ids imageTag="$IMAGE_TAG" > /dev/null 2>&1; then
+            echo "Reusing immutable image $IMAGE_TAG"
+          else
+            docker build --pull --build-arg NEXT_PUBLIC_SITE_URL="$SITE_URL" --tag "$REGISTRY/$REPOSITORY:$IMAGE_TAG" .
+            docker push "$REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          fi
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.5
+          terraform_wrapper: false
+      - name: Apply reviewed environment infrastructure
+        working-directory: infra/terraform
+        env:
+          TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+          TF_VAR_environment: ${{ inputs.environment }}
+          TF_VAR_domain_name: ${{ vars.CANONICAL_DOMAIN }}
+          TF_VAR_cloudfront_certificate_arn: ${{ vars.CLOUDFRONT_CERTIFICATE_ARN }}
+          TF_VAR_origin_certificate_arn: ${{ vars.ORIGIN_CERTIFICATE_ARN }}
+          TF_VAR_origin_header_value: ${{ secrets.ORIGIN_HEADER_VALUE }}
+          TF_VAR_availability_zones: ${{ vars.AVAILABILITY_ZONES_JSON }}
+          TF_VAR_container_image: ${{ steps.ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ steps.release.outputs.image_tag }}
+          TF_VAR_nat_gateway_count: ${{ vars.NAT_GATEWAY_COUNT }}
+          TF_VAR_desired_count: ${{ vars.DESIRED_TASK_COUNT }}
+          TF_VAR_minimum_task_count: ${{ vars.MINIMUM_TASK_COUNT }}
+          TF_VAR_maximum_task_count: ${{ vars.MAXIMUM_TASK_COUNT }}
+          TF_VAR_alert_email: ${{ vars.ALERT_EMAIL }}
+        run: |
+          terraform init -input=false -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}" -backend-config="dynamodb_table=${{ vars.TF_LOCK_TABLE }}" -backend-config="key=elion/${{ inputs.environment }}/terraform.tfstate" -backend-config="region=${{ vars.AWS_REGION }}" -backend-config="encrypt=true"
+          terraform apply -input=false -auto-approve
+          echo "distribution_id=$(terraform output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
+        id: infrastructure
+      - name: Invalidate public HTML after successful origin rollout
+        run: aws cloudfront create-invalidation --distribution-id '${{ steps.infrastructure.outputs.distribution_id }}' --paths '/*'
+      - name: Verify public HTTPS health
+        env:
+          SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-all-errors "$SITE_URL/api/health"

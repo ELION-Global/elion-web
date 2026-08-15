@@ -26,3 +26,5 @@ jobs:
       - run: npm run test:performance
       - run: npm run test:smoke
       - run: npm run audit
+      - name: Verify the production container can be built
+        run: docker build --tag elion-web:ci .

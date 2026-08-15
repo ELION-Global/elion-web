@@ -15,6 +15,13 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# Public Next.js variables are compiled into the production output. These build
+# arguments intentionally contain no credentials; CI supplies the canonical
+# staging or production URL when it builds a release image.
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ARG NEXT_PUBLIC_SITE_NAME=ELION
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_NAME=$NEXT_PUBLIC_SITE_NAME
 
 RUN npm run build
 
