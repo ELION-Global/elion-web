@@ -53,7 +53,7 @@ npm run test:static
 
 The existing dynamic `GET /api/health` remains the Docker/AWS health contract. A fully static Pages deployment has no application process or dependency graph to probe, so running a Worker solely to return a timestamp would create cost, code, configuration, and a new failure surface without producing a more meaningful signal.
 
-For the static target, `out/api/health.json` preserves the read-only JSON contract (`status`, `service`, `timestamp`) and the Pages `_redirects` rule maps `/api/health` to it. Its `Cache-Control` is `no-store`. A future external monitor must probe the public homepage and `/api/health`; this verifies edge delivery and public routing. It must not be described as an origin or database health probe.
+For the static target, `out/api/health.json` preserves the read-only JSON contract (`status`, `service`, `timestamp`) and adds a `delivery: "static"` field so the document is distinguishable from the dynamic origin response; the Pages `_redirects` rule maps `/api/health` to it. Its `Cache-Control` is `no-store`. A future external monitor must probe the public homepage and `/api/health`; this verifies edge delivery and public routing. It must not be described as an origin or database health probe.
 
 Add a Worker only when an anonymous dynamic API genuinely exists. If that occurs, keep it in a dedicated Cloudflare boundary and send its security headers from the Worker response, not only from `_headers`.
 

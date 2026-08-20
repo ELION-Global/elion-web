@@ -9,5 +9,15 @@ node_modules/
 Thumbs.db
 coverage/
 .turbo/
-.artifacts/static-export/
+.artifacts/
 .terraform/
+
+# Local secrets / credential files (never commit)
+CLOUDFARE_TOKEN.txt
+CLOUDFLARE_TOKEN.txt
+*token*.txt
+
+# Local tool/session artifacts
+.amazonq/
+chat_with_AIs.txt
+blend_logo.png
