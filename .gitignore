@@ -21,3 +21,7 @@ CLOUDFLARE_TOKEN.txt
 .amazonq/
 chat_with_AIs.txt
 blend_logo.png
+
+# Backbone scaffolding source (must never enter the repo)
+_backbone-pack/
+_backbone-pack.zip
