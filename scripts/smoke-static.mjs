@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
-import { access } from 'node:fs/promises'
+import { access, readdir, readFile } from 'node:fs/promises'
 import { constants } from 'node:fs'
+import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const host = '127.0.0.1'
@@ -25,6 +26,26 @@ async function waitForServer() {
 }
 
 await access(outputDirectory, constants.R_OK)
+
+async function collectHtmlFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true })
+  const files = []
+  for (const entry of entries) {
+    const entryPath = join(directory, entry.name)
+    if (entry.isDirectory()) {
+      files.push(...(await collectHtmlFiles(entryPath)))
+    } else if (entry.name.endsWith('.html')) {
+      files.push(entryPath)
+    }
+  }
+  return files
+}
+
+const htmlFiles = await collectHtmlFiles(outputDirectory)
+for (const htmlFile of htmlFiles) {
+  const html = await readFile(htmlFile, 'utf8')
+  assert.doesNotMatch(html, /\/_next\/image/, `${htmlFile} unexpectedly references /_next/image`)
+}
 
 const server = spawn(process.execPath, [previewPath], {
   env: { ...process.env, HOSTNAME: host, PORT: port },
