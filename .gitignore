@@ -29,3 +29,7 @@ _backbone-pack.zip
 # Launch-prep scaffolding source (must never enter the repo)
 _prep/
 _prep.zip
+
+# Project-charter scaffolding source (must never enter the repo)
+_projects/
+_projects.zip
