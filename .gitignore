@@ -25,3 +25,7 @@ blend_logo.png
 # Backbone scaffolding source (must never enter the repo)
 _backbone-pack/
 _backbone-pack.zip
+
+# Launch-prep scaffolding source (must never enter the repo)
+_prep/
+_prep.zip
