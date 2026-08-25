@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 30
     environment: ${{ inputs.environment }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.git_ref || github.sha }}
           fetch-depth: 1
