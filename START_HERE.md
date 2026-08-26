@@ -50,8 +50,9 @@ come from anywhere.
 
 ## How our work is organized
 
-- **Projects** group related work (e.g. SKYBRIDGE, LOVE). Each has a charter in
-  [`docs/projects/`](https://github.com/ELION-Global/elion-web/tree/master/docs/projects).
+- **Projects** group related work — [SKYBRIDGE](https://github.com/ELION-Global/skybridge)
+  and [LOVE](https://github.com/ELION-Global/love). Each project has its own repository,
+  where its charter, tasks, and discussions live.
 - **Issues** are units of work, labeled by type (`bug`, `task`, `research`, `docs`,
   `design`) and area, with difficulty markers (`good first issue`, `help wanted`).
 - **The board** shows what's open, in progress, and in review.

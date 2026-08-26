@@ -33,3 +33,7 @@ _prep.zip
 # Project-charter scaffolding source (must never enter the repo)
 _projects/
 _projects.zip
+
+# Project-repo scaffolding source (must never enter the repo)
+_projrepos/
+_projrepos.zip
