@@ -24,7 +24,7 @@ export function SiteHeader() {
             aria-label="ELION — home"
             className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-elion-blue rounded"
           >
-            <ElionLogo size="sm" priority className="w-[116px] h-auto" />
+            <ElionLogo variant="blend" size="sm" priority className="w-[116px] h-auto" />          
           </Link>
 
           {/* Desktop nav */}
